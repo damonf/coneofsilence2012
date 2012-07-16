@@ -2,20 +2,29 @@
 <div class="container-fluid">
   <h1>Cone of Silence</h1>
   
-  <div class="row-fluid show-grid">
-    <form class="well span12">
+  <div class="row show-grid">
 
-      <!-- TODO: add span4 etc. here, or define more rows first? -->
+    <form class="well span5">
 
-      <textarea rows="10" placeholder="Secret text…"></textarea>
-
-      <div class="input-append">
-        <!-- must be on 1 line for bootstrap prepend -->
-        <input type="text" placeholder="Secret key…"><button type="submit" class="btn">Encode</button><button type="submit" class="btn">Decode</button>
+      <div class="row show-grid">
+        <div class="span5">
+          <textarea class="secret-text span5" rows="12" placeholder="Secret text…"></textarea>
+        </div>
       </div>
 
-      <button class="btn">Load</button>
-      <button type="submit" class="btn">Save</button>
+      <div class="row show-grid">
+        <div class="span5 input-append">
+            <!-- must be on 1 line for bootstrap prepend -->
+            <input class="secret-key" type="text" placeholder="Secret key…"><button type="submit" class="btn">Encode</button><button type="submit" class="btn">Decode</button>
+        </div>
+      </div>
+
+      <div class="row show-grid">
+        <div class="span5">
+            <button class="btn">Load</button>
+            <button type="submit" class="btn">Save</button>
+        </div>
+      </div>
 
     </form>
   </div>
