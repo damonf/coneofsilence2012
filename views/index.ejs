@@ -8,21 +8,21 @@
 
       <div class="row show-grid">
         <div class="span5">
-          <textarea class="secret-text span5" rows="12" placeholder="Secret text…"></textarea>
+          <textarea id="secretText" data-bind="value: secretText, valueUpdate: 'afterkeydown'" class="secret-text span5" rows="12" placeholder="Secret text…"></textarea>
         </div>
       </div>
 
       <div class="row show-grid">
         <div class="span5 input-append">
             <!-- must be on 1 line for bootstrap prepend -->
-            <input class="secret-key" type="text" placeholder="Secret key…"><button type="submit" class="btn">Encode</button><button type="submit" class="btn">Decode</button>
+            <input id="secretKey" data-bind="value: secretKey, valueUpdate: 'afterkeydown'" class="secret-key" type="text" placeholder="Secret key…"><button data-bind="enable: canEncode, click: encode" class="btn">Encode</button><button data-bind="enable: canEncode, click: decode" class="btn">Decode</button>
         </div>
       </div>
 
       <div class="row show-grid">
         <div class="span5">
             <button class="btn">Load</button>
-            <button type="submit" class="btn">Save</button>
+            <button class="btn">Save</button>
         </div>
       </div>
 
@@ -32,7 +32,41 @@
 </div>
   
 <script src="/jquery.js"></script>
+<script src="/knockout-2.1.0.debug.js"></script>
 <script type = "text/javascript">
+
+  function ViewModel() {
+    var that = this;
+    that.secretText = ko.observable('');
+    that.secretKey = ko.observable('');
+    that.canEncode = ko.computed(function() {
+      return that.secretKey().length > 0 && that.secretText().length > 0;
+    });
+    that.encode = function() {
+      $.ajax({
+        type: "POST",
+        url: "encode",
+        data: { secretText: that.secretText(), secretKey: that.secretKey() }
+      }).done(function( data ) {
+        console.log( "returned: " + data );
+        that.secretText(data);
+      });
+    };
+    that.decode = function() {
+      $.ajax({
+        type: "POST",
+        url: "decode",
+        data: { secretText: that.secretText(), secretKey: that.secretKey() }
+      }).done(function( data ) {
+        console.log( "returned: " + data );
+        that.secretText(data);
+      });
+    };
+  };
+
+  var vm;
   $(function() {
+    vm = new ViewModel();
+    ko.applyBindings(vm);
   });
 </script>
