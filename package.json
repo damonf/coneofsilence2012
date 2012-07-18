@@ -1,0 +1,19 @@
+{
+  "author": "damon",
+  "name": "coneOfSilence2012",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://smellybob43@bitbucket.org/smellybob43/coneofsilence2012.git"
+  },
+  "dependencies": {
+    "express": "2.5.11",
+    "ejs": "0.7.2",
+    "less-middleware": "0.1.4"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
