@@ -15,13 +15,13 @@
       <div class="row show-grid">
         <div class="span5 input-append">
             <!-- must be on 1 line for bootstrap prepend -->
-            <input id="secretKey" data-bind="value: secretKey, valueUpdate: 'afterkeydown'" class="secret-key" type="text" placeholder="Secret key…"><button data-bind="enable: canEncode, click: encode" class="btn">Encode</button><button data-bind="enable: canEncode, click: decode" class="btn">Decode</button>
+            <input id="secretKey" data-bind="value: secretKey, valueUpdate: 'afterkeydown'" class="secret-key" type="password" placeholder="Secret key…"><button data-bind="enable: canEncode, click: encode" class="btn">Encode</button><button data-bind="enable: canEncode, click: decode" class="btn">Decode</button>
         </div>
       </div>
 
       <div class="row show-grid">
         <div class="span5">
-            <button class="btn">Load</button>
+          <input type="file" data-bind="event: { change: load }"/>
             <button class="btn">Save</button>
         </div>
       </div>
@@ -61,6 +61,18 @@
         console.log( "returned: " + data );
         that.secretText(data);
       });
+    };
+    that.load = function(data, evt) {
+      var file = evt.target.files[0];
+      if (file) {
+        var r = new FileReader();
+        r.onload = function(e) { 
+          that.secretText(e.target.result);
+        }
+        r.readAsText(file);
+      } else { 
+        // TODO:load failed
+      }
     };
   };
 
