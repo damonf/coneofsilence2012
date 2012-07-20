@@ -29,7 +29,7 @@
       </div>
 
       <div class="alert alert-error" data-bind="visible: error">
-        <button class="close" data-bind="click: showError(false), clickBubble: false">×</button>
+        <button class="close" data-bind="click: function(data, evt) { showError(false, data, evt); }">×</button>
         <span data-bind="html: errorMessage"></span>
       </div>
 
@@ -51,7 +51,10 @@
     });
     that.error = ko.observable(false);
     that.errorMessage = ko.observable('');
-    that.showError = function(val) { that.error(val); }; 
+    that.showError = function(val, data, evt) {
+      that.error(val); 
+      evt.preventDefault();
+    }; 
     that.encode = function() {
       $.ajax({
         type: "POST",
