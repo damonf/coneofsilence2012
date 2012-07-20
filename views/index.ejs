@@ -28,8 +28,8 @@
         </div>
       </div>
 
-      <div class="alert alert-error" data-bind="visible: error">
-        <button class="close" data-bind="click: function(data, evt) { showError(false, data, evt); }">×</button>
+      <div class="alert alert-error" data-bind="visible: errorMessage().length > 0">
+        <button class="close" data-bind="click: function(data, evt) { errorMessage(''); evt.preventDefault(); }">×</button>
         <span data-bind="html: errorMessage"></span>
       </div>
 
@@ -49,12 +49,7 @@
     that.canEncode = ko.computed(function() {
       return that.secretKey().length > 0 && that.secretText().length > 0;
     });
-    that.error = ko.observable(false);
     that.errorMessage = ko.observable('');
-    that.showError = function(val, data, evt) {
-      that.error(val); 
-      evt.preventDefault();
-    }; 
     that.encode = function() {
       $.ajax({
         type: "POST",
@@ -65,7 +60,6 @@
         that.secretText(data);
       }).fail(function( data ) {
         that.errorMessage('Encode failed.');
-        that.showError(true);
       });
     };
     that.decode = function() {
@@ -78,7 +72,6 @@
         that.secretText(data);
       }).fail(function( data ) {
         that.errorMessage('Decode failed.');
-        that.showError(true);
       });
     };
     that.load = function(data, evt) {
@@ -93,11 +86,9 @@
         }
         else {
           that.errorMessage('Not a text file.');
-          that.showError(true);
         }
       } else { 
         that.errorMessage('Could not load file.');
-        that.showError(true);
       }
     };
   };
