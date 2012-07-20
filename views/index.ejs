@@ -21,8 +21,10 @@
 
       <div class="row show-grid">
         <div class="span5">
-          <input type="file" data-bind="event: { change: load }"/>
-            <button class="btn">Save</button>
+          <span class="file-loader">
+            <button class="btn">Load</button>
+            <input type="file" data-bind="event: { change: load }"/>
+          </span>
         </div>
       </div>
 
