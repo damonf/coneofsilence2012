@@ -28,6 +28,11 @@
         </div>
       </div>
 
+      <div class="alert alert-error" data-bind="visible: error">
+        <button class="close" data-bind="click: showError(false), clickBubble: false">×</button>
+        <span data-bind="html: errorMessage"></span>
+      </div>
+
     </form>
   </div>
 
@@ -44,6 +49,9 @@
     that.canEncode = ko.computed(function() {
       return that.secretKey().length > 0 && that.secretText().length > 0;
     });
+    that.error = ko.observable(false);
+    that.errorMessage = ko.observable('');
+    that.showError = function(val) { that.error(val); }; 
     that.encode = function() {
       $.ajax({
         type: "POST",
@@ -52,6 +60,9 @@
       }).done(function( data ) {
         console.log( "returned: " + data );
         that.secretText(data);
+      }).fail(function( data ) {
+        that.errorMessage('Encode failed.');
+        that.showError(true);
       });
     };
     that.decode = function() {
@@ -62,18 +73,28 @@
       }).done(function( data ) {
         console.log( "returned: " + data );
         that.secretText(data);
+      }).fail(function( data ) {
+        that.errorMessage('Decode failed.');
+        that.showError(true);
       });
     };
     that.load = function(data, evt) {
       var file = evt.target.files[0];
       if (file) {
-        var r = new FileReader();
-        r.onload = function(e) { 
-          that.secretText(e.target.result);
+        if (file.type.match('text.*')) {
+            var r = new FileReader();
+            r.onload = function(e) { 
+              that.secretText(e.target.result);
+            }
+            r.readAsText(file);
         }
-        r.readAsText(file);
+        else {
+          that.errorMessage('Not a text file.');
+          that.showError(true);
+        }
       } else { 
-        // TODO:load failed
+        that.errorMessage('Could not load file.');
+        that.showError(true);
       }
     };
   };
