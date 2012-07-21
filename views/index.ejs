@@ -75,6 +75,7 @@
           clearTimeout(timeout);
           timeout = setTimeout(function(){
             that.encode();
+            that.secretKey('');
           }, 300000);
         }).fail(function( data ) {
           that.errorMessage('Decode failed.');

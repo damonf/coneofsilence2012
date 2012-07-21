@@ -3,6 +3,7 @@
 }
 .secret-text {
   max-width: 370px;
+  background-color: black;
 }
 .file-loader {
   position: relative;

@@ -11,7 +11,7 @@ exports.encode = function(req, res) {
 
   var plaintext = new Buffer(text);
   var encrypted = "";
-  var cipher = crypto.createCipher('blowfish', key);
+  var cipher = crypto.createCipher('aes256', key);
   encrypted += cipher.update(plaintext, 'binary', 'base64');
   encrypted += cipher.final('base64');
 
@@ -25,7 +25,7 @@ exports.decode = function(req, res) {
   var crypto = require('crypto');
 
   var decrypted = "";
-  var decipher = crypto.createDecipher('blowfish', key);
+  var decipher = crypto.createDecipher('aes256', key);
   decrypted += decipher.update(text, 'base64', 'binary');
   decrypted += decipher.final('binary');
 
