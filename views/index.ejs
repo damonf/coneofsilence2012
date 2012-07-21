@@ -42,60 +42,64 @@
 <script src="/knockout-2.1.0.debug.js"></script>
 <script type = "text/javascript">
 
-  function ViewModel() {
-    var that = this;
-    that.secretText = ko.observable('');
-    that.secretKey = ko.observable('');
-    that.canEncode = ko.computed(function() {
-      return that.secretKey().length > 0 && that.secretText().length > 0;
-    });
-    that.errorMessage = ko.observable('');
-    that.encode = function() {
-      $.ajax({
-        type: "POST",
-        url: "encode",
-        data: { secretText: that.secretText(), secretKey: that.secretKey() }
-      }).done(function( data ) {
-        console.log( "returned: " + data );
-        that.secretText(data);
-      }).fail(function( data ) {
-        that.errorMessage('Encode failed.');
+  $(function() {
+
+    function ViewModel() {
+      var timeout;
+      var that = this;
+      that.secretText = ko.observable('');
+      that.secretKey = ko.observable('');
+      that.canEncode = ko.computed(function() {
+        return that.secretKey().length > 0 && that.secretText().length > 0;
       });
-    };
-    that.decode = function() {
-      $.ajax({
-        type: "POST",
-        url: "decode",
-        data: { secretText: that.secretText(), secretKey: that.secretKey() }
-      }).done(function( data ) {
-        console.log( "returned: " + data );
-        that.secretText(data);
-      }).fail(function( data ) {
-        that.errorMessage('Decode failed.');
-      });
-    };
-    that.load = function(data, evt) {
-      var file = evt.target.files[0];
-      if (file) {
-        if (file.type.match('text.*')) {
+      that.errorMessage = ko.observable('');
+      that.encode = function() {
+        $.ajax({
+          type: "POST",
+          url: "encode",
+          data: { secretText: that.secretText(), secretKey: that.secretKey() }
+        }).done(function( data ) {
+          that.secretText(data);
+          clearTimeout(timeout);
+        }).fail(function( data ) {
+          that.errorMessage('Encode failed.');
+        });
+      };
+      that.decode = function() {
+        $.ajax({
+          type: "POST",
+          url: "decode",
+          data: { secretText: that.secretText(), secretKey: that.secretKey() }
+        }).done(function( data ) {
+          that.secretText(data);
+          clearTimeout(timeout);
+          timeout = setTimeout(function(){
+            that.encode();
+          }, 300000);
+        }).fail(function( data ) {
+          that.errorMessage('Decode failed.');
+        });
+      };
+      that.load = function(data, evt) {
+        var file = evt.target.files[0];
+        if (file) {
+          if (file.type.match('text.*')) {
             var r = new FileReader();
             r.onload = function(e) { 
               that.secretText(e.target.result);
+              clearTimeout(timeout);
             }
             r.readAsText(file);
+          }
+          else {
+            that.errorMessage('Not a text file.');
+          }
+        } else { 
+          that.errorMessage('Could not load file.');
         }
-        else {
-          that.errorMessage('Not a text file.');
-        }
-      } else { 
-        that.errorMessage('Could not load file.');
-      }
+      };
     };
-  };
 
-  var vm;
-  $(function() {
-    vm = new ViewModel();
-    ko.applyBindings(vm);
+    ko.applyBindings(new ViewModel());
   });
 </script>
