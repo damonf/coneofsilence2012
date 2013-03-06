@@ -1,3 +1,4 @@
+#!node
 
 var express = require('express')
   , app = express.createServer()
@@ -14,3 +15,7 @@ app.post('/decode', site.decode);
 
 app.listen(3000);
 console.log('server started');
+
+var spawn = require('child_process').spawn;
+spawn('open', ['http://localhost:3000/']);
+
